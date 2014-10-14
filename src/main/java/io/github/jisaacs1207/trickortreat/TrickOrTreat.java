@@ -164,8 +164,8 @@ public final class TrickOrTreat extends JavaPlugin implements Listener{
 					Block block;
 					while(notOkay){
 						yes = 0;
-						areaRadius = 200; //Or any radius you want
-						minRadius = 1; // This would give me a radius between 500 and 1000
+						areaRadius = 6000; 
+						minRadius = 200;
 						t = Math.random() * Math.PI;
 						radius = Math.random()*(areaRadius - minRadius) + minRadius;
 						x = Math.cos(t) * radius;
@@ -328,7 +328,7 @@ public final class TrickOrTreat extends JavaPlugin implements Listener{
 	       						String pAdd;
 	       						getServer().dispatchCommand(getServer().getConsoleSender(), "nick " + player.getName() + " off");
 	       						double n = Math.random();
-	       						if (n < 0.1) pAdd = "Lame ";
+	       						if (n < 0.1) pAdd = "Lame_";
 	       						else if (n < 0.1) pAdd = "Stinky_";
 	       						else if (n < 0.2) pAdd = "Ugly_";
 	       						else if (n < 0.3) pAdd = "Simple_";
