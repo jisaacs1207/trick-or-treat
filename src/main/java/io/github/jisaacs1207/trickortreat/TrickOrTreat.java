@@ -169,7 +169,7 @@ public final class TrickOrTreat extends JavaPlugin implements Listener{
 						t = Math.random() * Math.PI;
 						radius = Math.random()*(areaRadius - minRadius) + minRadius;
 						x = Math.cos(t) * radius;
-						y = Math.sin(t) * radius;
+						y = 70;
 						z = Math.sin(t) * radius;
 						loc = new Location(world,x,y,z);
 					    block = player.getWorld().getBlockAt(loc);
@@ -191,6 +191,11 @@ public final class TrickOrTreat extends JavaPlugin implements Listener{
 					    
 					    loc3 = new Location(world,x,y-1,z);
 					    block = player.getWorld().getBlockAt(loc3);
+					    while(block.getTypeId()==0){
+					    	y=y-1;
+							loc3 = new Location(world,x,y,z);
+						    block = player.getWorld().getBlockAt(loc3);
+					    }
 					    if((block.getTypeId()!=0)&&(block.getTypeId()!=10)&&(block.getTypeId()!=11)) yes = yes+1;
 					    
 					    if(getWorldGuard().canBuild(player, block)) yes = yes+1;
