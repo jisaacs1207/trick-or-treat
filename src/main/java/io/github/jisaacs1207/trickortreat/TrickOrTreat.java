@@ -147,74 +147,8 @@ public final class TrickOrTreat extends JavaPlugin implements Listener{
 		Action pAction = event.getAction();
 		if (pAction == Action.RIGHT_CLICK_BLOCK ) {
 			if((player.getItemInHand().getTypeId()==122)&&(player.getItemInHand().getDurability()==1)){
-				if(getWorldGuard().canBuild(player, player.getTargetBlock(null, 5).getLocation())){
-					double areaRadius;
-					double minRadius;
-					double t;
-					double radius;
-					double x;
-					double y;
-					double z;
-					int yes;
-					World world = player.getWorld();
-					boolean notOkay = true;
-					Location loc;
-					Location loc2;
-					Location loc3;
-					Block block;
-					while(notOkay){
-						yes = 0;
-						areaRadius = 6000; 
-						minRadius = 200;
-						t = Math.random() * Math.PI;
-						radius = Math.random()*(areaRadius - minRadius) + minRadius;
-						x = Math.cos(t) * radius;
-						y = 70;
-						z = Math.sin(t) * radius;
-						loc = new Location(world,x,y,z);
-					    block = player.getWorld().getBlockAt(loc);
-					    while(block.getTypeId()!=0){
-					    	y=y+1;
-							loc = new Location(world,x,y,z);
-						    block = player.getWorld().getBlockAt(loc);
-					    }
-					    yes=yes+1;
-					    
-					    loc2 = new Location(world,x,y+1,z);
-					    block = player.getWorld().getBlockAt(loc2);
-					    while(block.getTypeId()!=0){
-					    	y=y+1;
-							loc2 = new Location(world,x,y+1,z);
-						    block = player.getWorld().getBlockAt(loc2);
-					    }
-					    yes=yes+1;
-					    
-					    loc3 = new Location(world,x,y-1,z);
-					    block = player.getWorld().getBlockAt(loc3);
-					    while(block.getTypeId()==0){
-					    	y=y-1;
-							loc3 = new Location(world,x,y,z);
-						    block = player.getWorld().getBlockAt(loc3);
-					    }
-					    if((block.getTypeId()!=0)&&(block.getTypeId()!=10)&&(block.getTypeId()!=11)) yes = yes+1;
-					    
-					    if(getWorldGuard().canBuild(player, block)) yes = yes+1;
-					    
-					    if(yes==4){
-					    	notOkay=false;
-					    	loc = new Location(world,x,y,z);
-					    	player.playEffect(loc,Effect.SMOKE,5);
-						    player.playSound(loc, Sound.ENDERMAN_TELEPORT, 10, 4);
-						    player.teleport(loc);
-						    player.damage(2);
-					    }
-					}	
-					event.setCancelled(true);
-				}
-				else{
-					player.sendMessage(ChatColor.RED +"Try placing the dung in an unprotected area!");
-				}
-				
+				getServer().dispatchCommand(getServer().getConsoleSender(), "warp end " + player.getName());
+				event.setCancelled(true);
 			}
 		}
 
@@ -236,6 +170,79 @@ public final class TrickOrTreat extends JavaPlugin implements Listener{
 				}
 			}	
 		}
+	}
+	@EventHandler(priority=EventPriority.LOW)
+	public void onPumpkinClick(PlayerInteractEvent event){	
+		Player player = event.getPlayer(); // player name
+		Action pAction = event.getAction();
+		if ((pAction == Action.RIGHT_CLICK_AIR)||(pAction == Action.RIGHT_CLICK_BLOCK) ) {
+			if(player.getItemInHand().getTypeId()==91){
+				if(player.getItemInHand().hasItemMeta()){
+					int pCount = 0;
+					boolean p1 = false;
+					boolean p2 = false;
+					boolean p3 = false;
+					boolean p4 = false;
+					boolean p5 = false;
+					boolean gP = false;
+					for(int i = 0 ; i < player.getInventory().getSize() ; i++) {
+						ItemStack item = player.getInventory().getItem(i);
+						if(item == null){
+							return;
+						}
+						else{
+							if(item.hasItemMeta()){
+								String dName = item.getItemMeta().getDisplayName();
+								if(!dName.isEmpty()){
+									if((dName.equals(ChatColor.GOLD + "Piece 1: Great Pumpkin"))&&(!p1)){
+										pCount=pCount+1;
+										p1=true;
+									}
+									if((dName.equals(ChatColor.GOLD + "Piece 2: Great Pumpkin"))&&(!p2)){
+										pCount=pCount+1;
+										p2=true;
+									}
+									if((dName.equals(ChatColor.GOLD + "Piece 3: Great Pumpkin"))&&(!p3)){
+										pCount=pCount+1;
+										p3=true;
+									}
+									if((dName.equals(ChatColor.GOLD + "Piece 4: Great Pumpkin"))&&(!p4)){
+										pCount=pCount+1;
+										p4=true;
+									}
+									if((dName.equals(ChatColor.GOLD + "Piece 5: Great Pumpkin"))&&(!p5)){
+										pCount=pCount+1;
+										p5=true;
+									}
+									if(pCount==5) gP=true;
+									
+								}
+							}
+						}
+						if(gP){
+							player.sendMessage(ChatColor.GOLD+"You find yourself in front of a giant Pumpkin!");
+							Location pumpkin = new Location(Bukkit.getWorld("DIM1"), -53, 60, -111);
+							player.teleport(pumpkin);
+							for(int p = 0 ; p < player.getInventory().getSize() ; p++) {
+								item = player.getInventory().getItem(p);
+								if(item.getTypeId()==91){
+									item.setTypeId(361);
+									if(item.hasItemMeta()){
+										ItemMeta m = item.getItemMeta();
+										m.setDisplayName(null);
+										m.setLore(null);
+										item.setItemMeta(m);
+									}
+								}
+								player.updateInventory();
+							}
+							break;
+						}
+					}
+				}
+			}
+		}
+		
 	}
 	
 	@EventHandler(priority=EventPriority.LOW)
